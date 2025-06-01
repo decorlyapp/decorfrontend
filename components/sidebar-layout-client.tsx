@@ -6,7 +6,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function SidebarLayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hideSidebarPaths = ['/', '/sign-in', '/sign-up'];
+  const hideSidebarPaths = ['/', '/sign-in', '/sign-up', '/verify-signup-link'];
   const showSidebar = !hideSidebarPaths.includes(pathname);
 
   return (

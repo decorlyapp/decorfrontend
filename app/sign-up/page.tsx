@@ -186,7 +186,7 @@ function SignUpForm() {
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="h-11 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  className="h-11 w-full border-2 border-gray-300 focus:ring-black focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0"
                   placeholder="First name"
                   required
                   disabled={isLoading}
@@ -202,7 +202,7 @@ function SignUpForm() {
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="h-11 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  className="h-11 w-full border-2 border-gray-300 focus:ring-black focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0"
                   placeholder="Last name"
                   required
                   disabled={isLoading}
@@ -219,7 +219,7 @@ function SignUpForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                className="h-11 w-full border-2 border-gray-300 focus:ring-black focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0"
                 placeholder="m@example.com"
                 required
                 disabled={isLoading}
@@ -235,7 +235,7 @@ function SignUpForm() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-11 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                className="h-11 w-full border-2 border-gray-300 focus:ring-black focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0"
                 placeholder="Create a password (min 8 characters)"
                 required
                 minLength={8}
@@ -264,7 +264,7 @@ function SignUpForm() {
               Already have an account?{" "}
               <Link
                 href={`/sign-in${redirectUrl !== "/" ? `?redirect_url=${encodeURIComponent(redirectUrl)}` : ""}`}
-                className="text-blue-600 hover:text-blue-500 font-medium"
+                className="text-blue-600 hover:text-black font-medium"
               >
                 Sign in
               </Link>

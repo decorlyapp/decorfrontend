@@ -42,14 +42,6 @@ function SignInForm() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect_url") || "/";
 
-  // Temporary debug log
-  console.log("Clerk environment check:", {
-    hasPublishableKey: !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-    publishableKeyPrefix: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.substring(0, 7),
-    isLoaded,
-    signInAvailable: !!signIn,
-  });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted", { isLoaded, email });
@@ -114,7 +106,7 @@ function SignInForm() {
       await signIn.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/dashboard",
+        redirectUrlComplete: redirectUrl,
       });
       console.log("Google OAuth redirect initiated");
     } catch (err: any) {
@@ -150,7 +142,7 @@ function SignInForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                className="h-11 w-full border-2 border-gray-300 focus:ring-black focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0"
                 placeholder="m@example.com"
                 required
                 disabled={isLoading}
@@ -171,7 +163,7 @@ function SignInForm() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-11 w-full border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                className="h-11 w-full border-2 border-gray-300 focus:ring-black focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0"
                 placeholder="Enter your password"
                 required
                 disabled={isLoading}

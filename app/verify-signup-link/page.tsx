@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2, CheckCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function VerifySignUpLink() {
+// Create a client component that uses useSearchParams
+function VerifySignUpForm() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [verificationStatus, setVerificationStatus] = useState<"loading" | "success">("loading");
   const router = useRouter();
@@ -58,5 +59,18 @@ export default function VerifySignUpLink() {
         </Card>
       </div>
     </div>
+  );
+}
+
+// Main page component
+export default function VerifySignUpLink() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+      </div>
+    }>
+      <VerifySignUpForm />
+    </Suspense>
   );
 } 

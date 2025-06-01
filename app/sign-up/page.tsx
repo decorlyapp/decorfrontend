@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,8 @@ const GoogleIcon = () => (
   </svg>
 );
 
-export default function SignUpPage() {
+// Create a client component that uses useSearchParams
+function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -272,5 +273,18 @@ export default function SignUpPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main page component
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+      </div>
+    }>
+      <SignUpForm />
+    </Suspense>
   );
 } 

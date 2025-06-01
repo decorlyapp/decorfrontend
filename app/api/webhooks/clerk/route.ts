@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 import { supabase } from "@/lib/supabase";
 
-const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
+const webhookSecret = process.env.CLERK_WEBHOOK_SECRET!
 
 if (!webhookSecret) {
   throw new Error("Missing CLERK_WEBHOOK_SECRET");
@@ -11,7 +11,7 @@ if (!webhookSecret) {
 
 export async function POST(req: Request) {
   // Get the headers
-  const headerPayload = headers();
+  const headerPayload = await headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");

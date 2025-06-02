@@ -63,6 +63,7 @@ export function AppSidebar() {
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [isLoadingSpaces, setIsLoadingSpaces] = useState(true);
   const [supabaseUserId, setSupabaseUserId] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const capitalize = (str: string) => str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
   const initials = user ? `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase() : '';
 
@@ -71,10 +72,14 @@ export function AppSidebar() {
       if (!isSignedIn || !user) {
         setSpaces([]);
         setIsLoadingSpaces(false);
+        setAvatarUrl(null);
         return;
       }
 
       try {
+        // Set avatar URL
+        setAvatarUrl(user.externalAccounts[0]?.imageUrl || null);
+        
         // First get the Supabase user ID
         const userId = await getSupabaseUserId(user.id);
         setSupabaseUserId(userId);
@@ -163,8 +168,11 @@ export function AppSidebar() {
             <DropdownMenuTrigger asChild>
               <button className="w-full flex items-center gap-3 rounded-md px-2 py-2 hover:bg-muted transition">
                 <Avatar className="w-8 h-8">
-                  <AvatarImage src={user.externalAccounts[0].imageUrl} alt={`${initials}`} />
-                  <AvatarFallback>{initials}</AvatarFallback>
+                  {avatarUrl ? (
+                    <AvatarImage src={avatarUrl} alt={`${initials}`} />
+                  ) : (
+                    <AvatarFallback>{initials}</AvatarFallback>
+                  )}
                 </Avatar>
                 <div className="flex-1 text-left">
                   <div className="text-sm font-medium leading-tight">
@@ -177,8 +185,11 @@ export function AppSidebar() {
             <DropdownMenuContent side="top" className="w-64">
               <div className="flex items-center gap-3 p-3">
                 <Avatar className="w-10 h-10">
-                  <AvatarImage src={user.externalAccounts[0].imageUrl} alt={`${initials}`} />
-                  <AvatarFallback>{initials}</AvatarFallback>
+                  {avatarUrl ? (
+                    <AvatarImage src={avatarUrl} alt={`${initials}`} />
+                  ) : (
+                    <AvatarFallback>{initials}</AvatarFallback>
+                  )}
                 </Avatar>
                 <div>
                   <div className="font-medium">{capitalize(user.firstName || '')} {capitalize(user.lastName || '')}</div>

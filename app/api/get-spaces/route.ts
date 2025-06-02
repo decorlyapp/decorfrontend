@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
     // Fetch spaces for the user using the provided userId
     const { data: spaces, error: spacesError } = await supabase
-      .from('spacess')
+      .from('spaces')
       .select('name, url')
       .eq('id', userId)
       .order('created_at', { ascending: false })

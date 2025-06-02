@@ -13,7 +13,7 @@ export default function SidebarLayoutClient({ children }: { children: React.Reac
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
         {showSidebar && <AppSidebar />}
-        <main className={`flex-1 w-full ${showSidebar ? 'flex flex-col items-center justify-center max-w-7xl mx-auto px-4' : 'flex flex-col'}`}>
+        <main className={`flex-1 w-full ${showSidebar ? 'flex flex-col' : 'flex flex-col'}`}>
           {showSidebar && <SidebarTrigger className="absolute top-3 left-3" />}
           {children}
         </main>

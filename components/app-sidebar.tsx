@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Sidebar,
   SidebarContent,
@@ -9,15 +11,13 @@ import {
   SidebarMenuButton,
   SidebarHeader,
   SidebarFooter,
-  SidebarSeparator,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { NavSecondary } from "@/components/nav-secondary"
 import {
-  Briefcase,
   Coins,
   User2,
-  ChevronUp,
+  ChevronsUpDown,
   LogOut,
   Bell,
   LifeBuoy,
@@ -118,12 +118,12 @@ export function AppSidebar() {
         <div className="flex items-center justify-between px-2">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton size="lg" asChild>
+              <SidebarMenuButton className="-ml-1" size="lg" asChild>
                 <a href="#">
                   <div className="bg-black rounded-lg w-8 h-8 flex items-center justify-center text-white text-xl font-bold">
                     <GalleryVerticalEnd className="size-4" />
                   </div>
-                  <div className="flex flex-col gap-0.5 leading-none">
+                  <div className="flex flex-col gap-0 leading-none">
                     <span className="font-medium">Mydecorly</span>
                   </div>
                 </a>
@@ -134,23 +134,22 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarSeparator />
         <SidebarGroup>
-          <SidebarGroupLabel>Spaces</SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupLabel className="text-sm">Spaces</SidebarGroupLabel>
+          <SidebarGroupContent className="mt-2">
             <SidebarMenu>
               {isLoadingSpaces ? (
                 <SidebarMenuItem>
                 </SidebarMenuItem>
               ) : spaces.length === 0 ? (
                 <SidebarMenuItem>
+                    <span className="font-semibold text-sm text-black ml-2 mt-4">No spaces</span>
                 </SidebarMenuItem>
               ) : (
                 spaces.map((space) => (
                   <SidebarMenuItem key={space.name}>
                     <SidebarMenuButton asChild>
                       <a href={space.url}>
-                        <Briefcase className="mr-2" />
                         <span>{space.name}</span>
                       </a>
                     </SidebarMenuButton>
@@ -161,6 +160,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarGroupLabel className="text-sm ml-4">Help</SidebarGroupLabel>
       <NavSecondary items={data.navSecondary} className="mt-auto" />
       <SidebarFooter>
         {user ? (
@@ -179,7 +179,7 @@ export function AppSidebar() {
                     {capitalize(user.firstName || '')} {capitalize(user.lastName || '')}
                   </div>
                 </div>
-                <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                <ChevronsUpDown className="w-4 h-4 text-muted-foreground" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" className="w-64">
@@ -210,7 +210,8 @@ export function AppSidebar() {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => signOut()}>
-                <LogOut className="mr-2 w-4 h-4" /> Log out
+                <LogOut className="mr-2 w-4 h-4 text-red-500" />
+                <span className="text-red-500">Log out</span> 
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

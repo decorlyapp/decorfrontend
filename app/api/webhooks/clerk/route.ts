@@ -56,9 +56,13 @@ export async function POST(req: Request) {
       const primaryEmail = email_addresses.find((email: any) => email.id === evt.data.primary_email_address_id);
 
       let image_url = null;
-      if (primaryEmail?.verification?.strategy === "from_oauth_google" ){
-        image_url = evt.data.external_accounts[0].avatar_url;
-      } else if (primaryEmail?.verification?.strategy === "email_link"){
+      try {
+        if (primaryEmail?.verification?.strategy === "from_oauth_google" ){
+          image_url = evt.data.external_accounts[0].avatar_url;
+        } else if (primaryEmail?.verification?.strategy === "email_link"){
+          image_url = evt.data.image_url;
+        }
+      } catch (error) {
         image_url = evt.data.image_url;
       }
 

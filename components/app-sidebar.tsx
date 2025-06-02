@@ -15,18 +15,14 @@ import {
 import { NavSecondary } from "@/components/nav-secondary"
 import {
   Briefcase,
-  Users,
-  Plane,
   Coins,
   User2,
   ChevronUp,
   LogOut,
   Bell,
-  CreditCard,
   LifeBuoy,
   MessageCircle,
   GalleryVerticalEnd,
-  ArrowUpRight,
   LogIn,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -40,6 +36,7 @@ import {
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getSupabaseUserId } from "@/utils/get-supabase-user";
 
 interface Space {
   name: string;
@@ -57,39 +54,50 @@ const data = {navSecondary: [
       url: "#",
       icon: MessageCircle,
     },
-  ]}
+]}
 
 export function AppSidebar() {
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [isLoadingSpaces, setIsLoadingSpaces] = useState(true);
+  const [supabaseUserId, setSupabaseUserId] = useState<string | null>(null);
   const capitalize = (str: string) => str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : '';
   const initials = user ? `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase() : '';
 
   useEffect(() => {
-    const fetchSpaces = async () => {
-      if (!user) {
+    const fetchUserAndSpaces = async () => {
+      if (!isSignedIn || !user) {
         setSpaces([]);
         setIsLoadingSpaces(false);
         return;
       }
 
       try {
-        const response = await fetch('/api/get-spaces');
+        // First get the Supabase user ID
+        const userId = await getSupabaseUserId(user.id);
+        setSupabaseUserId(userId);
+
+        if (!userId) {
+          setSpaces([]);
+          return;
+        }
+
+        // Then fetch spaces using the Supabase user ID
+        const response = await fetch(`/api/get-spaces?userId=${userId}`);
         const data = await response.json();
         setSpaces(data.spaces || []);
       } catch (error) {
-        console.error('Error fetching spaces:', error);
+        console.error('Error fetching data:', error);
         setSpaces([]);
       } finally {
         setIsLoadingSpaces(false);
       }
     };
 
-    fetchSpaces();
-  }, [user]);
+    fetchUserAndSpaces();
+  }, [isSignedIn, user]);
 
   const handleSignIn = () => {
     router.push('/sign-in');
@@ -128,9 +136,6 @@ export function AppSidebar() {
             <SidebarMenu>
               {isLoadingSpaces ? (
                 <SidebarMenuItem>
-                  <SidebarMenuButton>
-                    <span className="font-semibold text-black text-sm">Loading spaces...</span>
-                  </SidebarMenuButton>
                 </SidebarMenuItem>
               ) : spaces.length === 0 ? (
                 <SidebarMenuItem>

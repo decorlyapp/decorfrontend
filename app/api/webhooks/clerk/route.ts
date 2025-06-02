@@ -55,12 +55,20 @@ export async function POST(req: Request) {
 
       const primaryEmail = email_addresses.find((email: any) => email.id === evt.data.primary_email_address_id);
 
+      // Determine provider type based on verification strategy
+      const providerType = primaryEmail?.verification?.strategy === "from_oauth_google" 
+        ? "google" 
+        : primaryEmail?.verification?.strategy === "email_link" 
+          ? "email" 
+          : null;
+
       const userData = {
         clerk_user_id: id,
         email: primaryEmail?.email_address || "",
         first_name: first_name || null,
         last_name: last_name || null,
         avatar_url: image_url || null,
+        provider_type: providerType,
         updated_at: new Date().toISOString(),
         ...(eventType === "user.created" && {
           created_at: new Date(created_at).toISOString(),

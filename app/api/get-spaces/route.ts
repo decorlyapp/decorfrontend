@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { NextResponse } from 'next/server';
-import { currentUser } from "@clerk/nextjs/server";
-import { saveError } from '@/utils/log-error';
+import { saveError } from '@/lib/log-error';
 
 export async function GET(request: Request) {
   try {

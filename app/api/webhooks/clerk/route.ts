@@ -51,11 +51,17 @@ export async function POST(req: Request) {
   // Handle the webhook
   try {
     if (eventType === "user.created" || eventType === "user.updated") {
-      const { id, email_addresses, first_name, last_name, image_url, created_at, last_sign_in_at } = evt.data;
+      const { id, email_addresses, first_name, last_name, created_at, last_sign_in_at } = evt.data;
 
       const primaryEmail = email_addresses.find((email: any) => email.id === evt.data.primary_email_address_id);
 
-      // Determine provider type based on verification strategy
+      let image_url = null;
+      if (primaryEmail?.verification?.strategy === "from_oauth_google" ){
+        image_url = evt.data.external_accounts[0].avatar_url;
+      } else if (primaryEmail?.verification?.strategy === "email_link"){
+        image_url = evt.data.image_url;
+      }
+
       const providerType = primaryEmail?.verification?.strategy === "from_oauth_google" 
         ? "google" 
         : primaryEmail?.verification?.strategy === "email_link" 

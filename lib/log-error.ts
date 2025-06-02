@@ -22,17 +22,19 @@ export interface NotionResponse {
 // discord
 export async function sendToDiscord(data: DiscordData): Promise<void> {
   const fieldsData = data.fields || Object.fromEntries(
-    Object.entries(data).filter(([key]) => !['title', 'color'].includes(key))
+    Object.entries(data)
+      .filter(([key]) => !['title', 'color'].includes(key))
+      .map(([key, value]) => [key, value ?? 'undefined']) // Handle undefined values
   );
 
   const payload = {
     embeds: [
       {
-        title: data.title || "Bug report",
-        color: data.color || 0xff0000,
+        title: data.title || "Frontend Bug report",
+        color: data.color || 0x0000FF,
         fields: Object.entries(fieldsData).map(([key, value]) => ({
           name: key,
-          value: String(value),
+          value: typeof value === 'object' ? JSON.stringify(value) : String(value),
           inline: true
         }))
       }
@@ -40,7 +42,11 @@ export async function sendToDiscord(data: DiscordData): Promise<void> {
   };
 
   try {
-    const response = await fetch(process.env.DISCORD_WEBHOOK_URL!, {
+    if (!process.env.DISCORD_WEBHOOK_BUGS_URL) {
+      throw new Error('Discord webhook URL is not configured');
+    }
+
+    const response = await fetch(process.env.DISCORD_WEBHOOK_BUGS_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +58,7 @@ export async function sendToDiscord(data: DiscordData): Promise<void> {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    console.error(`Failed to send Discord message: ${error}`);
+    console.error(`Failed to send Discord message:`, error);
   }
 }
 
@@ -223,7 +229,7 @@ export async function saveError(
   description: string,
   inputBody: string
 ): Promise<void> {
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.ENVIRONMENT === "production") {
     try {
       await addItemToNotion(name, endpoint, description, inputBody);
     } catch (error) {
